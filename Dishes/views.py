@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views.generic import View
 from Dishes.models import Dishes
 
@@ -20,6 +20,16 @@ class Add_Dishes_View(View):
 class Dish_List_View(View):
     def get(self,request,*args,**kwargs):
         qs = Dishes.objects.all()
-        return render(request,"list_dishes.html",{"todos":qs})
-        
+        return render(request,"list_dishes.html",{"dishes":qs})
 
+class Dish_Detail_View(View):
+    def get(self,request,*args,**kwargs):
+        id = kwargs.get("id")
+        dish = Dishes.objects.get(id=id)
+        return render(request,"dish-detail.html",{"dish":dish})        
+
+class Dish_Delete_View(View):
+    def get(self,request,*args,**kwargs):
+        id = kwargs.get("id")
+        Dishes.objects.get(id=id).delete()
+        return redirect("dish-list")
